@@ -1,0 +1,326 @@
+---
+import Base from "../layouts/Base.astro";
+import ArchitectureDiagram from "../components/ArchitectureDiagram.astro";
+import { href } from "../lib/paths";
+
+const layers = [
+  {
+    name: "Core",
+    repos: ["iridium-utils", "iridium-config"],
+    body: "Shared building blocks with no runtime dependencies. iridium-utils holds URL, encoding, JSON, header, timing, and address helpers that run in Node and in browsers. iridium-config defines one configuration shape for every Iridium service, validates it, and applies IRIDIUM_* environment overrides.",
+  },
+  {
+    name: "Client",
+    repos: ["iridium-proxy", "iridium-inspector"],
+    body: "Code that runs in the browser. In iridium-proxy, a service worker uses Scramjet to rewrite a page's requests so they travel through a transport instead of going to the network directly. iridium-inspector is a standalone developer tool built on the core helpers.",
+  },
+  {
+    name: "Transport",
+    repos: ["iridium-transport"],
+    body: "One small interface, Transport, with a connect() call that returns a readable and writable byte stream. Implementations cover direct TCP and TLS from Node, a Wisp client over WebSocket, and an in-memory pair for tests. Every implementation reports failures with the same error codes.",
+  },
+  {
+    name: "Infrastructure",
+    repos: ["iridium-proxy", "iridium-status"],
+    body: "The server side. iridium-proxy hosts a Wisp endpoint, serves the client files, and exposes health and readiness paths. Before it opens a connection, an address policy resolves the hostname and refuses private, loopback, link-local, and metadata addresses and blocked ports. iridium-status checks published endpoints on a schedule.",
+  },
+];
+
+const upstream = [
+  {
+    name: "Scramjet",
+    pkg: "@mercuryworkshop/scramjet",
+    license: "MIT",
+    url: "https://github.com/MercuryWorkshop/scramjet",
+    role: "Request and URL rewriting inside a service worker.",
+  },
+  {
+    name: "wisp-js",
+    pkg: "@mercuryworkshop/wisp-js",
+    license: "LGPL-3.0-or-later",
+    url: "https://github.com/MercuryWorkshop/wisp-js",
+    role: "Server-side Wisp implementation used by iridium-proxy.",
+  },
+  {
+    name: "epoxy-transport",
+    pkg: "@mercuryworkshop/epoxy-transport",
+    license: "AGPL-3.0-only",
+    url: "https://github.com/MercuryWorkshop/epoxy-transport",
+    role: "Browser transport that speaks Wisp and handles TLS in the client.",
+  },
+];
+---
+
+<Base
+  title="Infrastructure"
+  description="How Iridium's core, client, transport, and infrastructure layers fit together, and the Wisp-based approach to browser networking."
+  current={href("/infrastructure/")}
+>
+  <header class="page-head">
+    <div class="ir-container">
+      <p class="ir-eyebrow">Infrastructure</p>
+      <h1>Four layers, each with one job.</h1>
+      <p>
+        Open web infrastructure for browser-based networking and proxy applications. The pieces are
+        separate repositories so they can be tested, replaced, and reasoned about one at a time.
+      </p>
+    </div>
+  </header>
+
+  <section class="section" aria-labelledby="layers-title">
+    <div class="ir-container">
+      <div class="section-head">
+        <h2 id="layers-title">Layers</h2>
+        <p>From shared helpers up to the server that opens connections.</p>
+      </div>
+      <ol class="layers">
+        {layers.map((layer) => (
+          <li>
+            <h3>{layer.name}</h3>
+            <div>
+              <p>{layer.body}</p>
+              <p class="layers__repos">
+                {layer.repos.map((r) => (
+                  <a href={`https://github.com/Iridium-Group/${r}`} rel="noopener noreferrer">
+                    {r}
+                  </a>
+                ))}
+              </p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="wisp-title">
+    <div class="ir-container">
+      <div class="section-head">
+        <h2 id="wisp-title">Browser networking with Wisp</h2>
+        <p>Why a web page needs help to open a plain TCP connection, and how Wisp provides it.</p>
+      </div>
+      <ArchitectureDiagram />
+      <div class="prose wisp-prose">
+        <p>
+          Browsers do not let pages open raw TCP sockets. They can open WebSockets. Wisp is a small
+          protocol that carries many TCP streams over a single WebSocket, so a page can ask a server
+          to connect somewhere on its behalf and exchange bytes with that connection.
+        </p>
+        <p>A Wisp session uses four packet types:</p>
+        <dl class="packets">
+          <div>
+            <dt>CONNECT</dt>
+            <dd>Opens a stream to a host and port.</dd>
+          </div>
+          <div>
+            <dt>DATA</dt>
+            <dd>Carries bytes in either direction.</dd>
+          </div>
+          <div>
+            <dt>CONTINUE</dt>
+            <dd>
+              Tells the sender how much more it may send, so one busy stream cannot flood the
+              socket.
+            </dd>
+          </div>
+          <div>
+            <dt>CLOSE</dt>
+            <dd>Ends a stream with a reason code.</dd>
+          </div>
+        </dl>
+        <p>
+          In iridium-proxy, the browser side encrypts TLS itself, so the server relays bytes it
+          cannot read for HTTPS destinations. The server still decides which destinations are
+          allowed: the address policy in iridium-transport runs before every connection.
+        </p>
+        <p>
+          iridium-transport also includes its own Wisp client, written against the protocol
+          documentation, so Node programs and tests can talk to any Wisp server through the same
+          Transport interface.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="upstream-title">
+    <div class="ir-container">
+      <div class="section-head">
+        <h2 id="upstream-title">Upstream work</h2>
+        <p>
+          The proxy stands on open-source projects by Mercury Workshop. Iridium depends on their
+          published packages and is a separate group.
+        </p>
+      </div>
+      <table class="upstream">
+        <caption class="ir-visually-hidden">Upstream dependencies and their licenses</caption>
+        <thead>
+          <tr>
+            <th scope="col">Project</th>
+            <th scope="col">Used for</th>
+            <th scope="col">License</th>
+          </tr>
+        </thead>
+        <tbody>
+          {upstream.map((u) => (
+            <tr>
+              <th scope="row">
+                <a href={u.url} rel="noopener noreferrer">
+                  {u.name}
+                </a>
+                <code>{u.pkg}</code>
+              </th>
+              <td>{u.role}</td>
+              <td class="upstream__license">{u.license}</td>
+            </tr>
+          ))}
+        </tbody>
+      </table>
+      <p class="prose license-note">
+        Because epoxy-transport is AGPL-3.0-only and wisp-js is LGPL-3.0-or-later, iridium-proxy is
+        licensed AGPL-3.0-only. All other Iridium repositories are MIT.
+      </p>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .layers {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    counter-reset: layer;
+    border-bottom: 1px solid var(--ir-border);
+  }
+  .layers li {
+    display: grid;
+    grid-template-columns: minmax(11rem, 15rem) 1fr;
+    gap: 0.75rem 2rem;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--ir-border);
+    counter-increment: layer;
+  }
+  .layers h3 {
+    font-size: 1.25rem;
+  }
+  .layers h3::before {
+    content: counter(layer, decimal-leading-zero);
+    display: block;
+    font-family: var(--ir-font-mono);
+    font-size: 0.75rem;
+    font-weight: 400;
+    color: var(--ir-accent-soft);
+    margin-bottom: 0.375rem;
+  }
+  .layers p {
+    color: var(--ir-text-muted);
+    max-width: 44rem;
+  }
+  .layers__repos {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem 1.25rem;
+    margin-top: 0.75rem;
+    font-family: var(--ir-font-mono);
+    font-size: 0.8125rem;
+  }
+  .wisp-prose {
+    margin-top: 2.5rem;
+  }
+  .packets {
+    margin: 1rem 0 0;
+    border-top: 1px solid var(--ir-border);
+  }
+  .packets div {
+    display: grid;
+    grid-template-columns: 7rem 1fr;
+    gap: 1rem;
+    padding-block: 0.625rem;
+    border-bottom: 1px solid var(--ir-border);
+  }
+  .packets dt {
+    font-family: var(--ir-font-mono);
+    font-size: 0.8125rem;
+    color: var(--ir-accent-soft);
+    padding-top: 0.15rem;
+  }
+  .packets dd {
+    margin: 0;
+  }
+  .upstream {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  .upstream th,
+  .upstream td {
+    text-align: left;
+    vertical-align: top;
+    padding: 1rem 1.5rem 1rem 0;
+    border-top: 1px solid var(--ir-border);
+  }
+  .upstream tbody tr:last-child > * {
+    border-bottom: 1px solid var(--ir-border);
+  }
+  .upstream thead th {
+    font-family: var(--ir-font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ir-text-muted);
+    padding-block: 0.625rem;
+  }
+  .upstream tbody th {
+    font-weight: 500;
+  }
+  .upstream tbody th code {
+    display: block;
+    width: fit-content;
+    margin-top: 0.375rem;
+    font-weight: 400;
+    color: var(--ir-text-muted);
+  }
+  .upstream td {
+    color: var(--ir-text-muted);
+  }
+  .upstream__license {
+    font-family: var(--ir-font-mono);
+    font-size: 0.8125rem;
+    white-space: nowrap;
+    padding-right: 0;
+  }
+  .license-note {
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+  }
+  @media (max-width: 52rem) {
+    .layers li {
+      grid-template-columns: 1fr;
+    }
+  }
+  @media (max-width: 40rem) {
+    .upstream thead {
+      display: none;
+    }
+    .upstream,
+    .upstream tbody,
+    .upstream tr,
+    .upstream th,
+    .upstream td {
+      display: block;
+    }
+    .upstream tr {
+      border-top: 1px solid var(--ir-border);
+      padding-block: 1rem;
+    }
+    .upstream th,
+    .upstream td,
+    .upstream tbody tr:last-child > * {
+      border: 0;
+      padding: 0.25rem 0;
+    }
+    .upstream tbody tr:last-child {
+      border-bottom: 1px solid var(--ir-border);
+    }
+  }
+</style>

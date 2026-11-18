@@ -1,0 +1,153 @@
+---
+import Base from "../layouts/Base.astro";
+import ProjectCard from "../../ui/components/ProjectCard.astro";
+import Status from "../../ui/components/Status.astro";
+import { STATUSES } from "../../ui/status";
+import { projects } from "../data/projects";
+import { href } from "../lib/paths";
+---
+
+<Base
+  title="Projects"
+  description="Every Iridium Group repository, with its status, license, and technology."
+  current={href("/projects/")}
+>
+  <header class="page-head">
+    <div class="ir-container">
+      <p class="ir-eyebrow">Projects</p>
+      <h1>Every repository, with an honest status.</h1>
+      <p>
+        Iridium Group maintains {projects.length} public repositories. Each one is at version 0.1.0,
+        so each is marked Experimental or Development. Libraries are installed from GitHub; nothing
+        is published to npm yet.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--tight" aria-labelledby="repos-title">
+    <div class="ir-container">
+      <h2 id="repos-title" class="ir-visually-hidden">
+        Repositories
+      </h2>
+      <ul class="row-list">
+        {projects.map((p) => (
+          <ProjectCard
+            name={p.name}
+            description={p.description}
+            status={p.status}
+            kind={p.kind}
+            tech={p.tech}
+            license={p.license}
+            packageName={p.packageName}
+            github={p.github}
+            docs={p.docs}
+          />
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section id="status" class="section" aria-labelledby="status-title">
+    <div class="ir-container">
+      <div class="section-head">
+        <h2 id="status-title">Status labels</h2>
+        <p>
+          A label describes how much you can rely on a project today. It changes only when the
+          project does.
+        </p>
+      </div>
+      <table class="legend">
+        <caption class="ir-visually-hidden">Status labels and what they mean</caption>
+        <thead>
+          <tr>
+            <th scope="col">Label</th>
+            <th scope="col">Meaning</th>
+            <th scope="col">In use</th>
+          </tr>
+        </thead>
+        <tbody>
+          {STATUSES.map((s) => {
+            const count = projects.filter((p) => p.status === s.id).length;
+            return (
+              <tr>
+                <th scope="row">
+                  <Status status={s.id} />
+                </th>
+                <td>{s.description}</td>
+                <td class="legend__count">
+                  {count === 0 ? "None" : `${count} ${count === 1 ? "project" : "projects"}`}
+                </td>
+              </tr>
+            );
+          })}
+        </tbody>
+      </table>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .legend {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 0.9375rem;
+  }
+  .legend th,
+  .legend td {
+    text-align: left;
+    vertical-align: top;
+    padding: 1rem 1.5rem 1rem 0;
+    border-top: 1px solid var(--ir-border);
+  }
+  .legend tbody tr:last-child > * {
+    border-bottom: 1px solid var(--ir-border);
+  }
+  .legend thead th {
+    font-family: var(--ir-font-mono);
+    font-size: 0.6875rem;
+    font-weight: 400;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--ir-text-muted);
+    padding-block: 0.625rem;
+  }
+  .legend tbody th {
+    width: 11rem;
+    font-weight: 400;
+  }
+  .legend td {
+    color: var(--ir-text-muted);
+  }
+  .legend__count {
+    white-space: nowrap;
+    font-family: var(--ir-font-mono);
+    font-size: 0.8125rem;
+    padding-right: 0;
+  }
+  @media (max-width: 40rem) {
+    .legend thead {
+      display: none;
+    }
+    .legend,
+    .legend tbody,
+    .legend tr,
+    .legend th,
+    .legend td {
+      display: block;
+      width: auto;
+    }
+    .legend tr {
+      border-top: 1px solid var(--ir-border);
+      padding-block: 1rem;
+    }
+    .legend th,
+    .legend td,
+    .legend tbody tr:last-child > * {
+      border: 0;
+      padding: 0.25rem 0;
+    }
+    .legend tbody tr:last-child {
+      border-bottom: 1px solid var(--ir-border);
+    }
+  }
+</style>

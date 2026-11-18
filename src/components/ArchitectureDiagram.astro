@@ -1,0 +1,141 @@
+---
+const steps = [
+  {
+    id: "Client",
+    title: "Client",
+    body: "A web page in the browser. A service worker intercepts its requests.",
+    detail: "Browser",
+  },
+  {
+    id: "Proxy",
+    title: "Iridium Proxy",
+    body: "Rewrites URLs and requests in the page context using Scramjet, served by iridium-proxy.",
+    detail: "Service worker",
+  },
+  {
+    id: "Transport",
+    title: "Transport",
+    body: "Carries TCP streams to the server, multiplexed over one WebSocket with the Wisp protocol.",
+    detail: "Wisp over WebSocket",
+  },
+  {
+    id: "Target",
+    title: "Target",
+    body: "The destination server. Private and reserved addresses are refused by default.",
+    detail: "Public internet",
+  },
+];
+---
+
+<figure class="arch" aria-labelledby="arch-caption">
+  <ol class="arch__flow">
+    {steps.map((step, i) => (
+      <li class:list={["arch__node", { "arch__node--accent": step.id === "Proxy" }]}>
+        <span class="arch__index">{String(i + 1).padStart(2, "0")}</span>
+        <span class="arch__detail">{step.detail}</span>
+        <h3 class="arch__title">{step.title}</h3>
+        <p class="arch__body">{step.body}</p>
+      </li>
+    ))}
+  </ol>
+  <figcaption id="arch-caption" class="arch__caption">
+    Request path: Client, then Iridium Proxy, then Transport, then Target. Responses return along
+    the same path.
+  </figcaption>
+</figure>
+
+<style>
+  .arch {
+    margin: 0;
+  }
+  .arch__flow {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 1px solid var(--ir-border);
+    border-radius: var(--ir-radius);
+    background: var(--ir-surface);
+  }
+  .arch__node {
+    position: relative;
+    padding: 1.5rem 1.375rem 1.625rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+  }
+  .arch__node + .arch__node {
+    border-left: 1px solid var(--ir-border);
+  }
+  /* Arrow connector between nodes */
+  .arch__node + .arch__node::before {
+    content: "";
+    position: absolute;
+    left: -0.4rem;
+    top: 2.1rem;
+    width: 0.7rem;
+    height: 0.7rem;
+    background: var(--ir-surface);
+    border-top: 1px solid var(--ir-border-strong);
+    border-right: 1px solid var(--ir-border-strong);
+    transform: rotate(45deg);
+  }
+  .arch__node--accent {
+    background: var(--ir-surface-2);
+    box-shadow: inset 0 2px 0 var(--ir-accent);
+  }
+  .arch__node--accent + .arch__node::before {
+    background: var(--ir-surface-2);
+  }
+  .arch__index {
+    font-family: var(--ir-font-mono);
+    font-size: 0.75rem;
+    color: var(--ir-text-muted);
+  }
+  .arch__detail {
+    font-family: var(--ir-font-mono);
+    font-size: 0.75rem;
+    color: var(--ir-steel);
+  }
+  .arch__title {
+    font-size: 1.25rem;
+    margin-top: 0.25rem;
+  }
+  .arch__node--accent .arch__title {
+    color: var(--ir-accent-soft);
+  }
+  .arch__body {
+    color: var(--ir-text-muted);
+    font-size: 0.9375rem;
+  }
+  .arch__caption {
+    margin-top: 0.875rem;
+    font-size: 0.8125rem;
+    color: var(--ir-text-muted);
+  }
+  @media (max-width: 52rem) {
+    .arch__flow {
+      grid-template-columns: 1fr;
+    }
+    .arch__node {
+      display: grid;
+      grid-template-columns: 2.25rem 1fr;
+      column-gap: 0.75rem;
+      row-gap: 0.25rem;
+    }
+    .arch__index {
+      grid-row: span 3;
+      padding-top: 0.1rem;
+    }
+    .arch__node + .arch__node {
+      border-left: 0;
+      border-top: 1px solid var(--ir-border);
+    }
+    .arch__node + .arch__node::before {
+      left: 1.5rem;
+      top: -0.4rem;
+      transform: rotate(135deg);
+    }
+  }
+</style>

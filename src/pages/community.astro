@@ -1,0 +1,126 @@
+---
+import Base from "../layouts/Base.astro";
+import CodeBlock from "../../ui/components/CodeBlock.astro";
+import { site } from "../data/site";
+import { href } from "../lib/paths";
+
+const channels = [
+  {
+    title: "Issues",
+    body: "Report a bug or request a change in the repository it concerns. Each repository has its own issue tracker; this one covers the website.",
+    link: { label: "Website issues", href: site.issues },
+  },
+  {
+    title: "Discussions",
+    body: "Ask questions, share what you are building, and talk through ideas that are not yet a concrete issue.",
+    link: { label: "Organization discussions", href: site.discussions },
+  },
+  {
+    title: "Contributing",
+    body: "How to propose changes: fork, branch, run the checks, and open a pull request using Conventional Commit messages.",
+    link: { label: "Contributing guide", href: site.contributing },
+  },
+  {
+    title: "Code of conduct",
+    body: "The standards that apply in every Iridium repository, issue, discussion, and pull request.",
+    link: { label: "Code of conduct", href: site.codeOfConduct },
+  },
+  {
+    title: "Security",
+    body: "There is no security email yet. Report vulnerabilities privately with GitHub's private vulnerability reporting: open the repository's Security tab and choose Report a vulnerability.",
+    link: { label: "Security policy", href: site.security },
+  },
+];
+
+const setup = `git clone https://github.com/Iridium-Group/iridium.git
+cd iridium
+npm ci
+npm run dev`;
+---
+
+<Base
+  title="Community"
+  description="Where to report issues, ask questions, and contribute to Iridium Group projects."
+  current={href("/community/")}
+>
+  <header class="page-head">
+    <div class="ir-container">
+      <p class="ir-eyebrow">Community</p>
+      <h1>Work happens in the open, on GitHub.</h1>
+      <p>
+        Every conversation about Iridium projects takes place in public on GitHub, where it stays
+        searchable and linked to the code it is about.
+      </p>
+    </div>
+  </header>
+
+  <section class="section section--tight" aria-labelledby="channels-title">
+    <div class="ir-container">
+      <h2 id="channels-title" class="ir-visually-hidden">
+        Ways to take part
+      </h2>
+      <ul class="channels">
+        {channels.map((c) => (
+          <li>
+            <h3>{c.title}</h3>
+            <p>{c.body}</p>
+            <a href={c.link.href} rel="noopener noreferrer">
+              {c.link.label}
+            </a>
+          </li>
+        ))}
+      </ul>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="local-title">
+    <div class="ir-container local">
+      <div class="section-head">
+        <h2 id="local-title">Run this site locally</h2>
+        <p>Requires Node.js 22.23.4 or later and npm.</p>
+      </div>
+      <div class="local__code">
+        <CodeBlock code={setup} label="Shell" />
+      </div>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .channels {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    border-bottom: 1px solid var(--ir-border);
+  }
+  .channels li {
+    display: grid;
+    grid-template-columns: minmax(11rem, 15rem) 1fr auto;
+    gap: 0.5rem 2rem;
+    align-items: baseline;
+    padding-block: 1.5rem;
+    border-top: 1px solid var(--ir-border);
+  }
+  .channels h3 {
+    font-size: 1.1875rem;
+  }
+  .channels p {
+    color: var(--ir-text-muted);
+    max-width: 40rem;
+  }
+  .channels a {
+    white-space: nowrap;
+    font-size: 0.9375rem;
+  }
+  .channels a::after {
+    content: " \2197";
+  }
+  .local__code {
+    max-width: 40rem;
+  }
+  @media (max-width: 52rem) {
+    .channels li {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

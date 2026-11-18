@@ -1,0 +1,189 @@
+---
+import Base from "../layouts/Base.astro";
+import Button from "../../ui/components/Button.astro";
+import ProjectCard from "../../ui/components/ProjectCard.astro";
+import ArchitectureDiagram from "../components/ArchitectureDiagram.astro";
+import { projects } from "../data/projects";
+import { site } from "../data/site";
+import { href } from "../lib/paths";
+
+const featured = projects.filter((p) => p.featured);
+
+const principles = [
+  {
+    title: "Open source",
+    body: "Everything we write is public on GitHub under the MIT license, except where a dependency requires otherwise. The proxy is AGPL-3.0-only for that reason, and says so.",
+  },
+  {
+    title: "Honest status",
+    body: "Each project carries a status label that matches reality. Today that means Experimental or Development. We do not publish metrics we have not measured.",
+  },
+  {
+    title: "Small dependency trees",
+    body: "Libraries aim for zero runtime dependencies. When we do depend on someone else's work, we name it, credit it, and list its license.",
+  },
+  {
+    title: "Privacy-respecting defaults",
+    body: "Defaults lean toward collecting less: destination logging is off, and private network addresses are blocked unless an operator changes the configuration.",
+  },
+];
+---
+
+<Base current={href("/")}>
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="ir-container hero__inner">
+      <p class="ir-eyebrow">Iridium Group · Open-source collective</p>
+      <h1 id="hero-title">Technology for a more open web.</h1>
+      <p class="hero__lead">
+        Iridium Group builds open-source proxy infrastructure, developer tools, and modern web
+        technologies.
+      </p>
+      <div class="hero__actions">
+        <Button href="#projects">Explore Projects</Button>
+        <Button href={site.github} variant="secondary" external>
+          GitHub
+        </Button>
+      </div>
+    </div>
+  </section>
+
+  <section id="projects" class="section" aria-labelledby="projects-title">
+    <div class="ir-container">
+      <div class="section-head">
+        <h2 id="projects-title">Projects</h2>
+        <p>
+          Libraries, infrastructure, and tools for browser-based networking. All projects are at
+          version 0.1.0.
+        </p>
+      </div>
+      <ul class="row-list">
+        {featured.map((p) => (
+          <ProjectCard
+            name={p.name}
+            description={p.description}
+            status={p.status}
+            kind={p.kind}
+            github={p.github}
+            docs={p.docs}
+            compact
+          />
+        ))}
+      </ul>
+      <p class="more">
+        <a href={href("/projects/")}>All {projects.length} repositories and status definitions</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="arch-title">
+    <div class="ir-container">
+      <div class="section-head">
+        <h2 id="arch-title">Architecture</h2>
+        <p>
+          Open web infrastructure for browser-based networking and proxy applications. Each layer is
+          a separate project with its own interface.
+        </p>
+      </div>
+      <ArchitectureDiagram />
+      <p class="more">
+        <a href={href("/infrastructure/")}>How the layers fit together</a>
+      </p>
+    </div>
+  </section>
+
+  <section class="section" aria-labelledby="principles-title">
+    <div class="ir-container">
+      <div class="section-head">
+        <h2 id="principles-title">Principles</h2>
+        <p>What we hold ourselves to while the projects are young.</p>
+      </div>
+      <ol class="principles">
+        {principles.map((item, i) => (
+          <li>
+            <span class="principles__n">{String(i + 1).padStart(2, "0")}</span>
+            <h3>{item.title}</h3>
+            <p>{item.body}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  </section>
+</Base>
+
+<style>
+  .hero {
+    padding-block: clamp(4.5rem, 12vw, 9rem) clamp(3rem, 7vw, 5rem);
+    border-bottom: 1px solid var(--ir-border);
+  }
+  .hero h1 {
+    margin-top: 1.25rem;
+    font-size: clamp(2.6rem, 7.5vw, 5.25rem);
+    font-weight: 500;
+    letter-spacing: -0.035em;
+    line-height: 1.02;
+    max-width: 14ch;
+  }
+  .hero__lead {
+    margin-top: 1.75rem;
+    max-width: 36rem;
+    font-size: clamp(1.0625rem, 1.6vw, 1.25rem);
+    color: var(--ir-text-muted);
+  }
+  .hero__actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+    margin-top: 2.25rem;
+  }
+  .more {
+    margin-top: 1.25rem;
+    font-size: 0.9375rem;
+  }
+  .more a::after {
+    content: " \2192";
+  }
+  .principles {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    border-top: 1px solid var(--ir-border);
+  }
+  .principles li {
+    display: grid;
+    grid-template-columns: 2.5rem 1fr;
+    column-gap: 0.75rem;
+    row-gap: 0.5rem;
+    padding: 1.75rem 2rem 1.75rem 0;
+    border-bottom: 1px solid var(--ir-border);
+  }
+  .principles li:nth-child(even) {
+    padding-left: 2rem;
+    padding-right: 0;
+    border-left: 1px solid var(--ir-border);
+  }
+  .principles__n {
+    grid-row: span 2;
+    font-family: var(--ir-font-mono);
+    font-size: 0.75rem;
+    color: var(--ir-accent-soft);
+    padding-top: 0.3rem;
+  }
+  .principles h3 {
+    font-size: 1.1875rem;
+  }
+  .principles p {
+    color: var(--ir-text-muted);
+  }
+  @media (max-width: 52rem) {
+    .principles {
+      grid-template-columns: 1fr;
+    }
+    .principles li,
+    .principles li:nth-child(even) {
+      padding: 1.5rem 0;
+      border-left: 0;
+    }
+  }
+</style>
