@@ -1,0 +1,19 @@
+---
+interface Props {
+  as?: "div" | "article" | "section" | "li";
+}
+const { as: Tag = "div" } = Astro.props;
+---
+
+<Tag class="ir-card">
+  <slot />
+</Tag>
+
+<style>
+  .ir-card {
+    background: var(--ir-surface);
+    border: 1px solid var(--ir-border);
+    border-radius: var(--ir-radius);
+    padding: 1.25rem;
+  }
+</style>

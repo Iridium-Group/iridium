@@ -1,0 +1,49 @@
+---
+import { statusLabel, type StatusId } from "../status";
+interface Props {
+  status: StatusId;
+}
+const { status } = Astro.props;
+---
+
+<span class:list={["ir-status", `ir-status--${status}`]}>
+  <span class="ir-status__dot" aria-hidden="true"></span>
+  {statusLabel(status)}
+</span>
+
+<style>
+  .ir-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.45rem;
+    padding: 0.2rem 0.55rem;
+    border: 1px solid var(--ir-border-strong);
+    border-radius: 999px;
+    font-family: var(--ir-font-mono);
+    font-size: 0.75rem;
+    line-height: 1.4;
+    color: var(--ir-text-muted);
+    white-space: nowrap;
+  }
+  .ir-status__dot {
+    width: 0.45rem;
+    height: 0.45rem;
+    border-radius: 50%;
+    background: currentColor;
+  }
+  .ir-status--stable .ir-status__dot {
+    background: var(--ir-ok);
+  }
+  .ir-status--active .ir-status__dot {
+    background: var(--ir-info);
+  }
+  .ir-status--experimental .ir-status__dot {
+    background: var(--ir-warn);
+  }
+  .ir-status--development .ir-status__dot {
+    background: var(--ir-accent);
+  }
+  .ir-status--archived .ir-status__dot {
+    background: var(--ir-text-subtle);
+  }
+</style>

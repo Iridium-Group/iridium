@@ -1,0 +1,102 @@
+---
+export interface FooterGroup {
+  heading: string;
+  links: { label: string; href: string }[];
+}
+interface Props {
+  markSrc: string;
+  name: string;
+  description: string;
+  groups: FooterGroup[];
+  note: string;
+}
+const { markSrc, name, description, groups, note } = Astro.props;
+---
+
+<footer class="ir-footer">
+  <div class="ir-container ir-footer__grid">
+    <div class="ir-footer__about">
+      <p class="ir-footer__brand">
+        <img src={markSrc} alt="" width="36" height="20" />
+        {name}
+      </p>
+      <p class="ir-footer__desc">{description}</p>
+    </div>
+    {groups.map((group) => (
+      <nav class="ir-footer__group" aria-label={group.heading}>
+        <h2 class="ir-eyebrow">{group.heading}</h2>
+        <ul>
+          {group.links.map((link) => (
+            <li>
+              <a href={link.href}>{link.label}</a>
+            </li>
+          ))}
+        </ul>
+      </nav>
+    ))}
+  </div>
+  <div class="ir-container">
+    <p class="ir-footer__note">{note}</p>
+  </div>
+</footer>
+
+<style>
+  .ir-footer {
+    border-top: 1px solid var(--ir-border);
+    margin-top: 6rem;
+    padding-block: 3rem 2rem;
+    font-size: 0.875rem;
+  }
+  .ir-footer__grid {
+    display: grid;
+    gap: 2rem;
+    grid-template-columns: 2fr repeat(3, 1fr);
+  }
+  .ir-footer__brand {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    font-family: var(--ir-font-display);
+    font-weight: 600;
+    font-size: 1rem;
+  }
+  .ir-footer__brand img {
+    width: 36px;
+    height: auto;
+  }
+  .ir-footer__desc {
+    margin-top: 0.75rem;
+    color: var(--ir-text-muted);
+    max-width: 30rem;
+  }
+  .ir-footer__group ul {
+    list-style: none;
+    margin: 0.75rem 0 0;
+    padding: 0;
+    display: grid;
+    gap: 0.4rem;
+  }
+  .ir-footer__group a {
+    color: var(--ir-text-muted);
+    text-decoration: none;
+  }
+  .ir-footer__group a:hover {
+    color: var(--ir-text);
+    text-decoration: underline;
+  }
+  .ir-footer__note {
+    margin-top: 2.5rem;
+    padding-top: 1.25rem;
+    border-top: 1px solid var(--ir-border);
+    color: var(--ir-text-muted);
+    font-size: 0.8125rem;
+  }
+  @media (max-width: 52rem) {
+    .ir-footer__grid {
+      grid-template-columns: 1fr 1fr;
+    }
+    .ir-footer__about {
+      grid-column: 1 / -1;
+    }
+  }
+</style>

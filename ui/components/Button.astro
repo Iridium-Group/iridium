@@ -1,0 +1,61 @@
+---
+interface Props {
+  href: string;
+  variant?: "primary" | "secondary" | "ghost";
+  external?: boolean;
+}
+const { href, variant = "primary", external = false } = Astro.props;
+const rel = external ? "noopener noreferrer" : undefined;
+---
+
+<a class:list={["ir-btn", `ir-btn--${variant}`]} href={href} rel={rel}>
+  <slot />
+</a>
+
+<style>
+  .ir-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 2.75rem;
+    padding: 0.625rem 1.125rem;
+    border-radius: var(--ir-radius-sm);
+    border: 1px solid transparent;
+    font-family: var(--ir-font-sans);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    line-height: 1;
+    text-decoration: none;
+    transition:
+      background-color 0.15s ease,
+      border-color 0.15s ease,
+      color 0.15s ease;
+  }
+  .ir-btn--primary {
+    background: var(--ir-accent-strong);
+    border-color: var(--ir-accent);
+    color: #fff;
+  }
+  .ir-btn--primary:hover {
+    background: #5b21b6;
+    color: #fff;
+  }
+  .ir-btn--secondary {
+    background: transparent;
+    border-color: var(--ir-border-strong);
+    color: var(--ir-text);
+  }
+  .ir-btn--secondary:hover {
+    border-color: var(--ir-steel);
+    background: var(--ir-surface);
+    color: var(--ir-text);
+  }
+  .ir-btn--ghost {
+    background: transparent;
+    color: var(--ir-text-muted);
+    padding-inline: 0.5rem;
+  }
+  .ir-btn--ghost:hover {
+    color: var(--ir-text);
+  }
+</style>
