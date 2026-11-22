@@ -1,27 +1,26 @@
 /* Iridium design tokens. Shared across Iridium web projects; copy this file verbatim.
- * Palette: Obsidian #17191B, Porcelain #F5F5F1, Graphite #303438, Stone #929697, Mist #E7E8E3,
- * Signal Green #B8D98A. Green marks meaningful state only (active, focus, connected).
- * Dark is a soft charcoal between Obsidian and Graphite; light follows the system setting. */
+ * Black and white: neutral greys only, no colour. Dark is a soft charcoal; light follows the
+ * system setting. Status is carried by the label text, not by hue. */
 :root {
-  --ir-bg: #1b1d20;
-  --ir-surface: #212427;
-  --ir-surface-2: #292c30;
-  --ir-border: #33373b;
-  --ir-border-strong: #454a4f;
-  --ir-text: #f5f5f1;
-  --ir-text-muted: #a4a8aa;
-  --ir-text-subtle: #8a8e90;
-  --ir-accent: #b8d98a;
-  --ir-accent-strong: #b8d98a;
-  --ir-accent-soft: #e7e8e3;
-  --ir-steel: #929697;
-  --ir-ok: #b8d98a;
-  --ir-warn: #d6b968;
-  --ir-err: #d98f84;
-  --ir-info: #8fa9ad;
-  --ir-focus: #b8d98a;
-  --ir-on-primary: #17191b;
-  --ir-canvas: linear-gradient(165deg, #2a2d31 0%, #202225 45%, #1b1d20 100%);
+  --ir-bg: #171717;
+  --ir-surface: #1e1e1e;
+  --ir-surface-2: #262626;
+  --ir-border: #333333;
+  --ir-border-strong: #4a4a4a;
+  --ir-text: #fafafa;
+  --ir-text-muted: #a3a3a3;
+  --ir-text-subtle: #8a8a8a;
+  --ir-accent: #fafafa;
+  --ir-accent-strong: #fafafa;
+  --ir-accent-soft: #e5e5e5;
+  --ir-steel: #8a8a8a;
+  --ir-ok: #fafafa;
+  --ir-warn: #bdbdbd;
+  --ir-err: #fafafa;
+  --ir-info: #a3a3a3;
+  --ir-focus: #ffffff;
+  --ir-on-primary: #111111;
+  --ir-canvas: linear-gradient(165deg, #262626 0%, #1c1c1c 45%, #141414 100%);
   --ir-glass-blur: blur(14px) saturate(1.1);
   --ir-radius: 8px;
   --ir-radius-sm: 6px;
@@ -31,25 +30,25 @@
 }
 @media (prefers-color-scheme: light) {
   :root {
-    --ir-bg: #f5f5f1;
-    --ir-surface: #fafaf7;
-    --ir-surface-2: #e7e8e3;
-    --ir-border: #d6d8d2;
-    --ir-border-strong: #b9bcb5;
-    --ir-text: #17191b;
-    --ir-text-muted: #5b5f61;
-    --ir-text-subtle: #6d7173;
-    --ir-accent: #5a7d2c;
-    --ir-accent-strong: #5a7d2c;
-    --ir-accent-soft: #34491a;
-    --ir-steel: #686c6e;
-    --ir-ok: #4d6d24;
-    --ir-warn: #8a6d12;
-    --ir-err: #b3382c;
-    --ir-info: #3f6670;
-    --ir-focus: #5a7d2c;
-    --ir-on-primary: #f5f5f1;
-    --ir-canvas: linear-gradient(165deg, #f9f9f6 0%, #f0f0eb 55%, #e8e9e4 100%);
+    --ir-bg: #fafafa;
+    --ir-surface: #ffffff;
+    --ir-surface-2: #efefef;
+    --ir-border: #dcdcdc;
+    --ir-border-strong: #bdbdbd;
+    --ir-text: #111111;
+    --ir-text-muted: #5e5e5e;
+    --ir-text-subtle: #6b6b6b;
+    --ir-accent: #111111;
+    --ir-accent-strong: #111111;
+    --ir-accent-soft: #262626;
+    --ir-steel: #6b6b6b;
+    --ir-ok: #111111;
+    --ir-warn: #5e5e5e;
+    --ir-err: #111111;
+    --ir-info: #5e5e5e;
+    --ir-focus: #111111;
+    --ir-on-primary: #fafafa;
+    --ir-canvas: linear-gradient(165deg, #fdfdfd 0%, #f2f2f2 55%, #e8e8e8 100%);
   }
 }
 @media (prefers-reduced-transparency: reduce) {
