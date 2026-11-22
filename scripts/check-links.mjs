@@ -1,11 +1,13 @@
 #!/usr/bin/env node
 // Verifies that every internal link and asset reference in the built site resolves to a file in dist/.
-// Internal means a URL that starts with the site base (/iridium) or is relative; in-page #fragments
+// Internal means a URL that starts with the site base (/iridium, or / on Vercel) or is relative; in-page #fragments
 // are checked against element ids. External URLs are not fetched.
 import { readFile, readdir, stat } from "node:fs/promises";
 import { join, resolve, relative, extname } from "node:path";
 
-const BASE = "/iridium";
+// Must match the base in astro.config.mjs (a bare "/" is stored as an empty prefix).
+const onVercel = Boolean(process.env.VERCEL);
+const BASE = (process.env.SITE_BASE ?? (onVercel ? "/" : "/iridium")).replace(/\/$/, "");
 const DIST = resolve(process.argv[2] ?? "dist");
 
 async function walk(dir) {

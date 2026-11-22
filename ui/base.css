@@ -6,7 +6,7 @@
 }
 
 html {
-  color-scheme: dark;
+  color-scheme: dark light;
   -webkit-text-size-adjust: 100%;
   scroll-padding-top: 5rem;
 }
@@ -19,7 +19,8 @@ html {
 
 body {
   margin: 0;
-  background: var(--ir-bg);
+  background: var(--ir-canvas) fixed;
+  background-color: var(--ir-bg);
   color: var(--ir-text);
   font-family: var(--ir-font-sans);
   font-size: 1rem;
@@ -33,7 +34,7 @@ h2,
 h3,
 h4 {
   font-family: var(--ir-font-display);
-  font-weight: 500;
+  font-weight: 600;
   line-height: 1.15;
   letter-spacing: -0.02em;
   margin: 0;
@@ -84,8 +85,8 @@ svg {
 }
 
 ::selection {
-  background: var(--ir-accent-strong);
-  color: #fff;
+  background: var(--ir-accent);
+  color: var(--ir-on-primary);
 }
 
 .ir-container {

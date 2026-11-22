@@ -3,7 +3,8 @@ export const site = {
   tagline: "Technology for a more open web.",
   description:
     "Iridium Group is an independent open-source technology collective focused on building fast, reliable, and accessible web infrastructure.",
-  url: "https://iridium-group.github.io/iridium/",
+  // The site address including its base path, from the Astro config (ends with a slash).
+  url: new URL(import.meta.env.BASE_URL.replace(/\/?$/, "/"), import.meta.env.SITE).href,
   github: "https://github.com/Iridium-Group",
   repo: "https://github.com/Iridium-Group/iridium",
   docs: "https://iridium-group.github.io/iridium-docs/",

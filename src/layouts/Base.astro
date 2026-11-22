@@ -2,10 +2,8 @@
 import "@fontsource/inter/latin-400.css";
 import "@fontsource/inter/latin-500.css";
 import "@fontsource/inter/latin-600.css";
-import "@fontsource/space-grotesk/latin-500.css";
-import "@fontsource/space-grotesk/latin-600.css";
-import "@fontsource/jetbrains-mono/latin-400.css";
-import "@fontsource/jetbrains-mono/latin-500.css";
+import "@fontsource/ibm-plex-mono/latin-400.css";
+import "@fontsource/ibm-plex-mono/latin-500.css";
 import "../../ui/tokens.css";
 import "../../ui/base.css";
 import Nav from "../../ui/components/Nav.astro";
@@ -20,7 +18,9 @@ interface Props {
 }
 const { title, description = site.description, current } = Astro.props;
 const fullTitle = title ? `${title} · ${site.name}` : `${site.name} · ${site.tagline}`;
-const canonical = new URL(Astro.url.pathname.replace(/^\/iridium\/?/, ""), site.url).href;
+const basePath = import.meta.env.BASE_URL.replace(/\/$/, "");
+const canonical = new URL(Astro.url.pathname.slice(basePath.length).replace(/^\//, ""), site.url)
+  .href;
 const ogImage = new URL("og.png", site.url).href;
 
 const links = [
@@ -66,7 +66,8 @@ const footerGroups = [
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{fullTitle}</title>
     <meta name="description" content={description} />
-    <meta name="theme-color" content="#0B0A12" />
+    <meta name="theme-color" content="#1b1d20" media="(prefers-color-scheme: dark)" />
+    <meta name="theme-color" content="#f5f5f1" media="(prefers-color-scheme: light)" />
     <meta name="color-scheme" content="dark" />
     <link rel="canonical" href={canonical} />
     <link rel="icon" href={href("/favicon.ico")} sizes="any" />
